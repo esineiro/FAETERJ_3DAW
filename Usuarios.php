@@ -11,9 +11,7 @@
     <div id="content">
         <h1>Usuario</h1>
         <a href="CriarUsuario.php"><button class="button add">Criar</button></a>
-        <a href="AlterarUsuario.php"><button class="button add">Alterar</button></a>
 		<a href="ListarUsuario.php"><button class="button add">Listar</button></a>
-		<a href="ExcluirUsuario.php"><button class="button add">Criar</button></a>
         <table>
             <tr>
                 <th>Nome</th>
