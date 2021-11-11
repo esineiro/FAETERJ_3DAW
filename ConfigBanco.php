@@ -1,6 +1,6 @@
 <?php
-$dbl = "mysql:dbname=3DAW;host=127.0.0.1";
-$dbuser = "";
+$dbl = "mysql:dbname=3daw;host=127.0.0.1";
+$dbuser = "root";
 $dbpass = "";
 
 try {

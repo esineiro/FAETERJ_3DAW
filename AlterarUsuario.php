@@ -16,6 +16,8 @@ if ($valido) {
     if ($sql->rowCount() == 1) {
         $usuario = $sql->fetch();
         echo "
+       <h1>Usuários</h1>
+        <h2>Altera Usuário</h2>
         <form action='' method='post'>
             <table>
                 <tr>

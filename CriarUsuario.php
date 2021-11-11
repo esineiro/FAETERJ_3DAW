@@ -2,24 +2,24 @@
 require "ConfigBanco.php";
 
 echo "
+<h1>Usuários</h1>
+<h2>Cria Um Usuário</h2>
 <form action='' method='post'>
     <table>
         <tr>
-            <td style='width: 150px;'>Nome: </td>
+            <td>Nome: </td>
             <td><input type='text' name='nome' required></td>
         </tr>    
         <tr>
-            <td style='width: 150px;'>Matrícula: </td>
+            <td>Matrícula: </td>
             <td><input type='text' name='matricula' required></td>
-        </tr>
-        
+        </tr>       
         <tr>
-            <td style='width: 150px;'>Função: </td>
+            <td >Função: </td>
             <td><input type='text' name='funcao' required></td>
         </tr>
     </table>
     <input type='submit' value='Criar'>
-    
 </form>
 <a href='Usuarios.php'><button>Voltar</button></a>
 ";
@@ -27,9 +27,10 @@ $valido = false;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (
         isset($_POST["nome"]) && !empty($_POST["nome"]) &&
-        isset($_POST["matricula"]) && !empty($_POST["maticula"]) &&
+        isset($_POST["matricula"]) && !empty($_POST["matricula"]) &&
         isset($_POST["funcao"]) && !empty($_POST["funcao"])
     ) {
+        $valido=true;
         $nome = addslashes(converteMaiusculo($_POST["nome"]));
         $matricula = addslashes(trataString($_POST["matricula"]));
         $funcao = addslashes(converteMaiusculo($_POST["funcao"]));
@@ -40,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sqlCommand = $pdo->query($sqlCommand);
         $continua = false;
         if ($sqlCommand->rowCount() >= 1) {
-            echo "Matrícula já cadastrada.";
+            echo "Matrícula já cadastrada!";
         } else {
             $continua = true;
         }
@@ -54,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $sqlCommand = $pdo->query($sqlCommand);
                 $sql = "COMMIT;";
                 $sql = $pdo->query($sql);
-                echo "Usuário cadastrado com sucesso.";
+                echo "Usuário cadastrado com sucesso!";
             } catch (Exception $e) {
                 $sql = "ROLLBACK;";
                 $sql = $pdo->query($sql);
@@ -82,4 +83,3 @@ function converteMaiusculo($palavra)
 {
     return strtr(strtoupper($palavra), "àáâãäåæçèéêëìíîïðñòóôõö÷øùüúþÿ", "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÜÚÞß");
 }
-?>
