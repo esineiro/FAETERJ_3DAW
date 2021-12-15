@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        function NomeValido(pNome){
+            if (pNome == "") {
+                return false;
+            }
+            return true;
+        }
+        function emailValido(pEmail) {
+            let reg = /\S+@\S+\.\S+/;
+            return reg.test(pEmail);
+        }
+        function CPFValido(pCpf) {
+
+        }
+        function ValidarDigCPF(pCPF) {
+            let Soma = 0;
+            let Resto = 0;
+            // "12345678910";
+            for (let i=1; i<=9; i++) {
+                Soma = Soma + parseInt(pCPF.substring(i-1, i)) * (11 - i);
+            }
+            Resto = (Soma * 10) % 11;
+            if (Resto == 10) Resto = 0;
+            if (Resto != parseInt(pCPF.substring(9, 10))) return false;
+
+            Soma = 0;
+            for (let i=1; i<=10; i++) {
+                Soma = Soma + parseInt(pCPF.substring(i-1, i)) * (12 - i);
+            }
+            Resto = (Soma * 10) % 11;
+            if (Resto == 10) Resto = 0;
+            if (Resto != parseInt(pCPF.substring(10, 11))) return false;
+            return true;
+        }
+        function ValidarForm() {
+            let objForm = document.getElementById("cadAluno");
+            console.log("objForm: " + objForm.innerHTML);
+            let strNome = document.getElementById("nome").value;
+            let strEmail = document.getElementById("email").value;
+            let strCpf = document.getElementById("cpf").value;
+            let strMat = document.getElementById("matricula").value;
+            console.log("nome:" + strNome + "  email: " + strEmail + "  cpf:" + strCpf + "  Mat: " + strMat);
+            msgErro = "";
+            if (!NomeValido(strNome)) {
+                msgErro = "Nome não pode ser vazio. \n";
+            }
+            if (!emailValido(strEmail)) {
+                msgErro =+ "Email não está no padrão. \n";
+            }
+            if (!ValidarDigCPF(strCpf)) {
+                msgErro =+ "CPF não é valido. \n";
+            }
+            if (msgErro == "") {
+                EnviarForm(strNome, strEmail, strCpf, strMat);
+            }
+        }
+        function EnviarForm(pNome, pEmail, pCpf, pMat) {
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Chegou resposta: " + this.responseText)
+                    document.getElementById("msg").innerHTML = this.responseText;
+                }
+            }
+            xmlHttp.open("GET", "http://localhost/AV2/IncluirOnibus.php?nome=" + pNome +
+            "&email=" + pEmail + "&cpf=" + pCpf + "&matricula=" + pMat);
+            xmlHttp.send();
+            console.log("Enviei requisição");
+        }
+    </script>
+</head>
+<body>
+<a href="ListarOnibus.php">Listar Ônibus</a><br>
+<a href="IncluirOnibus.php">Incluir Ônibus</a><br>
+
+<h1>Inserir Ônibus</h1>
+<form action="" id="cadOnibus" >
+    Id:   <input type="text" name="id" id="id"><br>
+    Marca:   <input type="text" name="marca" id="marca"><br>
+    Modelo:   <input type="text" name="modelo" id="modelo"><br>
+    Qtd Assentos:   <input type="text" name="qtdAssentos" id="qtdAssentos"><br>
+    Tem Banheiro:   <input type="text" name="temBanheiro" id="temBanheiro"><br>
+    Tem Ar Condicionado:   <input type="text" name="temArCondicionado" id="temArCondicionado"><br>
+    Chassis:   <input type="text" name="chassis" id="chassis"><br>
+    Placa:   <input type="text" name="placa" id="placa"><br>
+
+    <input type="button" value="enviar" onclick="ValidarForm()">
+</form>
+
+<p id="msg"></p>
+
+</body>
+</html>
