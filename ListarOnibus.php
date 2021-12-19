@@ -18,6 +18,4 @@ While ($linha = $result->fetch_assoc()){
     $arrOnibus[$i] = $linha;
      $i++;
 }
-
 echo json_encode($arrOnibus, JSON_UNESCAPED_UNICODE);
-?>

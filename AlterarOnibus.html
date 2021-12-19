@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Alterar Onibus</title>
+    <script>
+
+        let pId = "";
+        let pMarca = "";
+        let pModelo = "";
+        let pQtdAssentos = "";
+        let pTemBanheiro = "";
+        let pTemArCond = "";
+        let pChassis = "";
+        let pPlaca = "";
+
+        function buscarOnibus() {
+
+            pPlaca = document.getElementById("txtPlaca").value;
+            pPlaca = pPlaca.replace(/\s/g, '');
+            console.log("Placa é " + pPlaca);
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Chegou resposta: " + this.responseText);
+                    let obj = JSON.parse(this.responseText);
+                    for (i = 0; i < obj.length; i++) {
+                        let linha = obj[i];
+                        criarLinhaTabela(linha);
+                    }
+                }
+            }
+
+            xmlHttp.open("GET", "http://localhost/3DAW/AV2/AlterarOnibus.php?id=" + pId + "&marca=" + pMarca + "&modelo=" + pModelo + "&qtdAssentos=" + pQtdAssentos + "&temBanheiro=" + pTemBanheiro + "&temArCondicionado=" + pTemArCond + "&chassis=" + pChassis + "&placa=" + pPlaca + "&alterar=0");
+            xmlHttp.send();
+            console.log("Enviei requisição")
+
+        }
+
+        function MarcaValida(pMarca) {
+            if (pMarca == "") {
+                return false;
+            }
+            return true;
+        }
+
+        function ModeloValido(pModelo) {
+            if (pModelo == "") {
+                return false;
+            }
+            return true;
+        }
+
+        function QtdAssentosValido(pQAssentos) {
+            if (parseInt(pQAssentos)) {
+                return true;
+            }
+            return false;
+        }
+
+        function TemBanheiroValido(pTBanheiro) {
+            if ((parseInt(pTBanheiro) == 0) || (parseInt(pTBanheiro) == 1)) {
+                return true;
+            }
+            return false;
+        }
+
+        function TemArCondicionadoValido(pTArCondicionado) {
+            if ((parseInt(pTArCondicionado) == 0) || (parseInt(pTArCondicionado) == 1)) {
+                return true;
+            }
+            return false;
+        }
+
+        function ChassisValido(pChassis) {
+            if (pChassis == "") {
+                return false;
+            }
+            return true;
+        }
+
+        function PlacaValida(pPlaca) {
+            if (pPlaca == "") {
+                return false;
+            }
+            return true;
+        }
+
+        function ValidarForm() {
+
+            let objForm = document.getElementById("AlteraOnibus");
+            console.log("objForm: " + objForm.innerHTML);
+            let strId = document.getElementById("id").value;
+            let strMarca = document.getElementById("marca").value;
+            let strModelo = document.getElementById("modelo").value;
+            let strQtdAssentos = document.getElementById("qtdAssentos").value;
+            let strTemBanheiro = document.getElementById("temBanheiro").value;
+            let strTemArCondicionado = document.getElementById("temArCondicionado").value;
+            let strChassis = document.getElementById("chassis").value;
+            let strPlaca = document.getElementById("placa").value;
+            console.log("Id:" + strId + " Marca:" + strMarca + " Modelo:" + strModelo + " Qtd Assentos:" + strQtdAssentos + "  Tem Banheiro:" + strTemBanheiro + "  Tem Ar Condicionado:" + strTemArCondicionado + "  Chassis: " + strChassis + "  Placa:" + strPlaca  + " Alterar=0");
+            let msgErro = "Erros de preenchimento: \n";
+
+            if (!MarcaValida(strMarca)) {
+                msgErro += "'Marca' não pode estar vazia. \n";
+            }
+            if (!ModeloValido(strModelo)) {
+                msgErro += "'Modelo' não pode estar vazio. \n";
+            }
+            if (!QtdAssentosValido(strQtdAssentos)) {
+                msgErro += "'Qtd Assentos' tem que ser numérico e não pode estar vazio. \n";
+            }
+            if (!TemBanheiroValido(strTemBanheiro)) {
+                msgErro += "'Tem banheiro' só aceita os números 0(não) ou 1(sim) e não pode estar vazio. \n";
+            }
+            if (!TemArCondicionadoValido(strTemArCondicionado)) {
+                msgErro += "'Tem Ar Condicionado' só aceita os números 0(não) ou 1(sim) e não pode estar vazio. \n";
+            }
+            if (!ChassisValido(strChassis)) {
+                msgErro += "'Chassis' não pode estar vazio. \n";
+            }
+            if (!PlacaValida(strPlaca)) {
+                msgErro += "'Placa' não pode estar vazia. \n";
+            }
+            if (msgErro == "Erros de preenchimento: \n") {
+                EnviarForm(strId, strMarca, strModelo, strQtdAssentos, strTemBanheiro, strTemArCondicionado, strChassis, strPlaca);
+            } else {
+                alert(msgErro);
+            }
+        }
+
+        function criarLinhaTabela(pobjReturnJSON) {
+
+            let tr = document.createElement("tr");
+
+            let td = document.createElement("td");
+            let id = document.createElement("input");
+            let textnode = document.createTextNode(pobjReturnJSON.id);
+            id.value = textnode.textContent;
+            id.id="id";
+            td.appendChild(id);
+            id.disabled = true;
+            tr.appendChild(td);
+
+            let td2 = document.createElement("td");
+            let marca = document.createElement("input");
+            textnode = document.createTextNode(pobjReturnJSON.marca);
+            marca.value = textnode.textContent;
+            marca.id="marca";
+            td2.appendChild(marca);
+            tr.appendChild(td2);
+
+            let td3 = document.createElement("td");
+            let modelo = document.createElement("input");
+            textnode = document.createTextNode(pobjReturnJSON.modelo);
+            modelo.value = textnode.textContent;
+            modelo.id = "modelo";
+            td3.appendChild(modelo);
+            tr.appendChild(td3);
+
+            let td4 = document.createElement("td");
+            let qtdAssentos = document.createElement("input");
+            textnode = document.createTextNode(pobjReturnJSON.qtdAssentos);
+            qtdAssentos.value = textnode.textContent;
+            qtdAssentos.id="qtdAssentos";
+            td4.appendChild(qtdAssentos);
+            tr.appendChild(td4);
+
+            let td5 = document.createElement("td");
+            let temBanheiro = document.createElement("input");
+            textnode = document.createTextNode(pobjReturnJSON.temBanheiro);
+            temBanheiro.value = textnode.textContent;
+            temBanheiro.id="temBanheiro";
+            td5.appendChild(temBanheiro);
+            tr.appendChild(td5);
+
+            let td6 = document.createElement("td");
+            let temArCondicionado = document.createElement("input");
+            textnode = document.createTextNode(pobjReturnJSON.temArCondicionado);
+            temArCondicionado.value = textnode.textContent;
+            temArCondicionado.id="temArCondicionado";
+            td6.appendChild(temArCondicionado);
+            tr.appendChild(td6);
+
+            let td7 = document.createElement("td");
+            let chassis = document.createElement("input");
+            textnode = document.createTextNode(pobjReturnJSON.chassis);
+            chassis.value = textnode.textContent;
+            chassis.id="chassis";
+            td7.appendChild(chassis);
+            tr.appendChild(td7);
+
+            let td8 = document.createElement("td");
+            let placa = document.createElement("input");
+            textnode = document.createTextNode(pobjReturnJSON.placa);
+            placa.value = textnode.textContent;
+            placa.id="placa";
+            td8.appendChild(placa);
+            tr.appendChild(td8);
+
+            let tr_fim = document.getElementById("corpoFormulario");
+            tr_fim.parentNode.insertBefore(tr, tr_fim);
+        }
+
+        function EnviarForm(pId, pMarca, pModelo, pQtdAssentos, pTemBanheiro, pTemArCond, pChassis, pPlaca) {
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log("Chegou resposta: " + this.responseText);
+                    document.getElementById("msg").innerHTML = this.responseText;
+                }
+            }
+            xmlHttp.open("GET", "http://localhost/3DAW/AV2/AlterarOnibus.php?id=" + pId + "&marca=" + pMarca + "&modelo=" + pModelo + "&qtdAssentos=" + pQtdAssentos + "&temBanheiro=" + pTemBanheiro + "&temArCondicionado=" + pTemArCond + "&chassis=" + pChassis + "&placa=" + pPlaca + "&alterar=1");
+            xmlHttp.send();
+            console.log("Enviei requisição");
+        }
+    </script>
+</head>
+<body>
+<a href="ListarOnibus.html">Listar Ônibus</a><br>
+<a href="IncluirOnibus.html">Inserir Ônibus</a><br>
+<a href="AlterarOnibus.html">Alterar Ônibus</a><br><br>
+
+<h1>Alterar Ônibus</h1>
+
+<table id="tabBusca">
+    <tr>
+        <td>Placa:</td>
+        <td><input type='text' id='txtPlaca'>&nbsp;<input type="button" value="Buscar" onclick="buscarOnibus();"></td>
+    </tr>
+</table>
+<form action="" id="AlteraOnibus">
+    <table id="tabAltera">
+        <tr>
+            <th>id</th>
+            <th>marca</th>
+            <th>modelo</th>
+            <th>qtdAssentos</th>
+            <th>temBanheiro</th>
+            <th>temArCondicionado</th>
+            <th>chassis</th>
+            <th>placa</th>
+            <th></th>
+        </tr>
+        <tr id="corpoFormulario">
+        </tr>
+        <tr><td><input type="button" value="Confirma Alterações" onclick="ValidarForm();"></td></tr>
+    </table>
+</form>
+</body>
+</html>

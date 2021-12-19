@@ -1,6 +1,5 @@
 <?php
 
-$id = $_GET["id"];
 $marca = $_GET["marca"];
 $modelo = $_GET["modelo"];
 $qtdAssentos = $_GET["qtdAssentos"];
@@ -18,14 +17,26 @@ if ($conn->connect_error) {
     die("Conexao com o banco de dados falhou!!!");
 }
 
-$sql = "insert into `onibus`(`id`, `marca`, `modelo`, `qtdAssentos`, `temBanheiro`, `temArCondicionado`, `chassis`, `placa`) VALUES ('$id',$marca','$modelo','$qtdAssentos','$temBanheiro','$temArCondicionado','$chassis','$placa');";
-$result = $conn->query($sql);
-//   if ($conn->query($sql) === TRUE) {
-$sucesso = true;
+$sql = "insert into `onibus`(`marca`, `modelo`, `qtdAssentos`, `temBanheiro`, `temArCondicionado`, `chassis`, `placa`) VALUES ('$marca','$modelo',$qtdAssentos,$temBanheiro,$temArCondicionado,'$chassis','$placa');";
 
-$sql = "select * from `onibus` where id=$id";
-$result = $conn->query($sql);
+if ($conn->query($sql)) {
+    $sucesso = true;
+    echo "Registro incluído com sucesso!  ";
+    $sql = "select * from `onibus` where placa='$placa'";
+    $result = $conn->query($sql);
 
-$jOnibus = json_encode($result);
-echo $jOnibus;
+    $arrOnibus[] = array();
+    $i = 0;
+    while ($linha = $result->fetch_assoc()) {
+        $arrOnibus[$i] = $linha;
+        $i++;
+    }
+
+    $jOnibus = json_encode($arrOnibus);
+    echo $jOnibus;
+} else {
+    echo "alert('Registro não incluído. Tente novamente.');";
+}
+
+
 ?>
